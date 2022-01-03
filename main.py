@@ -50,19 +50,17 @@ class checker():
 
             # setting up the loop so it runs every minute 
             current_timestamp = time.time()
-            timestamp_next_execution = self.timestamp_last_execution + 10
+            timestamp_next_execution = self.timestamp_last_execution + 60
 
             if current_timestamp > timestamp_next_execution:
 
                 self.timestamp_last_execution = current_timestamp
                 self.check_for_items_available()
-                print("executed") #DEBUG
 
             # sleep until next execution
             time_until_next_execution = timestamp_next_execution - time.time()
             
             if time_until_next_execution > 0:
-                print(f"sleeping for {time_until_next_execution} seconds") #DEBUG
                 time.sleep(time_until_next_execution)
 
 
@@ -74,7 +72,7 @@ class error_handling:
         with open('tokens.json') as f:
             self.tokens_dict = json.load(f)
         self.pusbullet_api_key = self.tokens_dict["pushbullet_token"]
-        self.send_error_messages_pushbullet = False
+        self.send_error_messages_pushbullet = True
 
 
     # deze functie is verantwoordelijk voor het correct handelen van de error moest deze gebeuren

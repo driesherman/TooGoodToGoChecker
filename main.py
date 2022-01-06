@@ -4,6 +4,8 @@ from pushbullet import Pushbullet
 import traceback
 import time
 import datetime
+import requests
+import os
 
 
 class checker():
@@ -11,7 +13,7 @@ class checker():
     def __init__(self):
 
         # importing tokens from json
-        with open('tokens.json') as f:
+        with open(os.path.join(os.path.dirname(__file__),'tokens.json')) as f:
             self.tokens_dict = json.load(f)
 
         # setting up the tgtg client
@@ -43,10 +45,31 @@ class checker():
                 # add to last executed dict
                 self.last_date_executed_dict[store] = datetime.date.today()
 
+    
+    # returns nothing, just waits until it succesfully pings Google
+    def wait_until_internet_connection(self):
+
+        internet_connection = False
+
+        while not internet_connection:
+
+            try:
+
+                request = requests.get('http://www.google.com', timeout=5)
+                internet_connection = True
+
+            except (requests.ConnectionError, requests.Timeout):
+
+                pass
+    
+
     # the main loop of the function
     def loop(self):
 
         while True:
+            
+            # wait until connected to the internet
+            self.wait_until_internet_connection()
 
             # setting up the loop so it runs every minute 
             current_timestamp = time.time()
@@ -69,7 +92,7 @@ class error_handling:
     def __init__(self):
 
         # getting the token
-        with open('tokens.json') as f:
+        with open(os.path.join(os.path.dirname(__file__),'tokens.json')) as f:
             self.tokens_dict = json.load(f)
         self.pusbullet_api_key = self.tokens_dict["pushbullet_token"]
         self.send_error_messages_pushbullet = True

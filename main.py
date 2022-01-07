@@ -104,7 +104,7 @@ class error_handling:
         self.send_error_messages_pushbullet = True
 
         # settings for logging
-        logging.basicConfig(filename=os.path.join(os.path.dirname(__file__),'logger.log'))
+        logging.basicConfig(filename=os.path.join(os.path.dirname(__file__),'logger.log'),filemode='w')
 
 
     # deze functie is verantwoordelijk voor het correct handelen van de error moest deze gebeuren
@@ -116,7 +116,7 @@ class error_handling:
         if self.send_error_messages_pushbullet:
 
             logging.error(error_message)
-            
+
             pb = Pushbullet(self.pusbullet_api_key)
             push = pb.push_note("Scraper error",(f"Error message: {error_message}"))
 

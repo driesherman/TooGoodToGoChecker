@@ -6,6 +6,7 @@ import time
 import datetime
 import requests
 import os
+import logging
 
 
 class checker():
@@ -26,7 +27,12 @@ class checker():
     # checks if there are any favourites with itmes available
     def check_for_items_available(self):
 
-        items = self.tgtg_client.get_items()
+        # Sometimes requests returns a "104 Connection reset by peer" connection error, this is the handling for it
+        try:
+            items = self.tgtg_client.get_items()
+        
+        except ConnectionError:
+            pass
 
         for i in items:
 
@@ -97,13 +103,20 @@ class error_handling:
         self.pusbullet_api_key = self.tokens_dict["pushbullet_token"]
         self.send_error_messages_pushbullet = True
 
+        # settings for logging
+        logging.basicConfig(filename=os.path.join(os.path.dirname(__file__),'logger.log'))
+
 
     # deze functie is verantwoordelijk voor het correct handelen van de error moest deze gebeuren
     # indien gecalld print ze de traceback, voegt deze toe aan de logs en stuurt deze op via pushbullet
     def exit_handler(self, error_message):
 
         print(error_message)
+
         if self.send_error_messages_pushbullet:
+
+            logging.error(error_message)
+            
             pb = Pushbullet(self.pusbullet_api_key)
             push = pb.push_note("Scraper error",(f"Error message: {error_message}"))
 

@@ -79,7 +79,7 @@ class checker():
 
             # setting up the loop so it runs every minute 
             current_timestamp = time.time()
-            timestamp_next_execution = self.timestamp_last_execution + 60
+            timestamp_next_execution = self.timestamp_last_execution + 5
 
             if current_timestamp > timestamp_next_execution:
 

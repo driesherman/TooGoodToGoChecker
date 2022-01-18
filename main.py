@@ -118,7 +118,7 @@ class error_handling:
             logging.error(error_message)
 
             pb = Pushbullet(self.pusbullet_api_key)
-            push = pb.push_note("Scraper error",(f"Error message: {error_message}"))
+            push = pb.push_note("TGTG scraper error",(f"Error message: {error_message}"))
 
 
 
